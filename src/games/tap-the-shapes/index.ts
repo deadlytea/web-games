@@ -4,6 +4,7 @@ import { SHAPES, shapeSvg, type ShapeDef } from "./shapes";
 
 const TARGET_ON_SCREEN = 5;
 const SIZE_VW = 22; // shape size relative to viewport
+const CONFETTI_COLORS = SHAPES.map((s) => s.color);
 
 function mount(root: HTMLElement): GameInstance {
   root.style.position = "absolute";
@@ -33,6 +34,7 @@ function mount(root: HTMLElement): GameInstance {
       if (!active.has(el)) return;
       active.delete(el);
       pop(def.freq);
+      burstConfetti(el);
       const anim = el.animate(
         [
           { transform: "scale(1)", opacity: 1 },
@@ -65,6 +67,41 @@ function mount(root: HTMLElement): GameInstance {
       svg.style.height = "100%";
     }
     return el;
+  }
+
+  function burstConfetti(from: HTMLElement) {
+    const b = from.getBoundingClientRect();
+    const r = root.getBoundingClientRect();
+    const cx = b.left - r.left + b.width / 2;
+    const cy = b.top - r.top + b.height / 2;
+
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement("div");
+      const color = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+      const size = rand(6, 8);
+      p.style.position = "absolute";
+      p.style.left = `${cx}px`;
+      p.style.top = `${cy}px`;
+      p.style.width = `${size}px`;
+      p.style.height = `${size}px`;
+      p.style.background = color;
+      p.style.borderRadius = Math.random() < 0.5 ? "50%" : "2px";
+      p.style.pointerEvents = "none";
+      root.appendChild(p);
+
+      const angle = rand(0, Math.PI * 2);
+      const dist = rand(60, 160);
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      const anim = p.animate(
+        [
+          { transform: "translate(-50%, -50%) rotate(0deg)", opacity: 1 },
+          { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy + 90}px)) rotate(${rand(-360, 360)}deg)`, opacity: 0 },
+        ],
+        { duration: rand(650, 950), easing: "cubic-bezier(.2,.6,.3,1)" }
+      );
+      anim.onfinish = () => p.remove();
+    }
   }
 
   for (let i = 0; i < TARGET_ON_SCREEN; i++) spawn();
