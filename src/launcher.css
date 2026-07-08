@@ -1,0 +1,89 @@
+:root {
+  --gap: clamp(12px, 3vw, 28px);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #101427;
+  color: #fff;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+
+/* --- Launcher grid --- */
+.launcher {
+  height: 100%;
+  padding: var(--gap);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 40vw, 240px), 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--gap);
+  align-content: start;
+}
+
+.tile {
+  border: none;
+  border-radius: 28px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: clamp(48px, 12vw, 96px);
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
+  transition: transform 0.08s ease;
+}
+
+.tile:active {
+  transform: translateY(4px) scale(0.97);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.tile__label {
+  font-size: clamp(16px, 4vw, 24px);
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Game stage --- */
+.stage {
+  position: fixed;
+  inset: 0;
+  background: #0a0d1a;
+}
+
+.stage__home {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
+  z-index: 10;
+  width: clamp(56px, 14vw, 76px);
+  height: clamp(56px, 14vw, 76px);
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: clamp(28px, 7vw, 40px);
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.stage__host {
+  position: absolute;
+  inset: 0;
+}
